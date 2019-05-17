@@ -40,7 +40,7 @@ void KalmanFilter::Update(const VectorXd &z) {
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
-  MatrixXd K = P_ * Ht; * Si;
+  MatrixXd K = P_ * Ht * Si;
   
   //new estimate
   x_ = x_ + (K * y);
@@ -56,6 +56,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   double x0 = x_(0);
   double x1 = x_(1);
   double x2 = x_(2);
+  double x3 = x_(3);
   
   float rho = sqrt(x0*x0 + x1*x1);
   float phi = atan2(x1, x0);
@@ -68,11 +69,15 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd z_pred(3);
   z_pred << rho, phi, rho_dot;
 
-  // Normalize angle to -pi and pi
-//  VectorXd z_gt = z;
-//  z_gt[1] = atan(tan(z_gt[1]));
-//  VectorXd y = z_gt - z_pred;
   VectorXd y = z - z_pred;
+  // Normalizing the angle to be -pi to pi
+  while (y(1) < -M_PI) {
+    y(1) += 2 * M_PI;
+  }
+  while (y(1) > M_PI) {
+    y(1) -= 2 * M_PI;
+  }
+
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
