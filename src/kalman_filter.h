@@ -63,6 +63,12 @@ class KalmanFilter {
 
   // measurement covariance matrix
   Eigen::MatrixXd R_;
+  
+private:
+  // Common measurement updates shared by KF and EKF
+  void UpdateInternal(const Eigen::VectorXd &y);
+  // Convert radar's internal state (polar) to measurement (cartesian)
+  Eigen::VectorXd RadarStateToMeasurement();
 };
 
 #endif // KALMAN_FILTER_H_
