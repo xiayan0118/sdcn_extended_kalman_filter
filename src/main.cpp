@@ -54,6 +54,9 @@ int main() {
 
         string event = j[0].get<string>();
         
+        // Telemetry is an automated communications process by which measurements and
+        // other data are collected at remote or inaccessible points and transmitted to
+        // receiving equipment for monitoring
         if (event == "telemetry") {
           // j[1] is the data JSON object
           string sensor_measurement = j[1]["sensor_measurement"];
